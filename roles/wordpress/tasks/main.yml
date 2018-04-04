@@ -3,6 +3,12 @@
   set_fact:
     template_dir: "./roles/wordpress/templates"
 
+- name: Get stack information for "{{ master_stack_name }}" before execution
+  cloudformation_facts:
+    stack_name: "{{ master_stack_name }}"
+    all_facts: true
+  ignore_errors: true
+
 - name: set VPC stack facts
   set_fact:
     public_subnet_b: "{{ cloudformation[master_stack_name].stack_resources.SubnetPublicSharedB }}"
