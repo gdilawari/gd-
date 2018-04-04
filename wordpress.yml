@@ -1,0 +1,9 @@
+- hosts: localhost 
+  gather_facts: false
+  roles:
+    - wordpress
+  vars:
+    application_stack_name: "wordpress-stack"
+    master_stack_name: "gianrean5"
+    region: "us-east-1"
+
