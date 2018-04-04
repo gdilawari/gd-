@@ -1,0 +1,69 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Deploy a Ubuntu 16.04 server with Drupal and CiviCRM, auto install required software, issue, install and configure Letsencrypt SSL with NGINX
+Parameters:
+  email:
+    Description: WordPress Admin Email
+    Type: String
+    Default: {{ email }}
+  VpcID:
+    Description: The VPC to deploy to
+    Type: String
+    Default: {{ vpc }}
+  SubnetID:
+    Description: The Subnet to deploy to
+    Type: String
+    Default: {{ subnet }}
+  SgID:
+    Description: The Security Group to assign the instance
+    Type: String
+    Default: {{ sg }}
+  mysqlRootPass:
+    Description: MySQL Root Password
+    NoEcho: 'true'
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "mysql_root_pass"
+  mysqlWordPressPass:
+    Description: Application MySQL Password
+    NoEcho: 'true'
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "wordpress_mysql_pass"
+  wordpressAdminPass:
+    Description: WordPress Admin Password
+    NoEcho: 'true'
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "wordpress_admin_pass"
+
+Resources:
+  WordpressInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: "ami-1853ac65" 
+      InstanceType: "t2.micro"
+      KeyName: "gianrean1"
+      Tags:
+      - Key: "Name"
+        Value: !Ref appName
+      SubnetId: !Ref SubnetID
+      SecurityGroupIds:
+      - !Ref SgID 
+      BlockDeviceMappings:
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeType: "gp2"
+            DeleteOnTermination: "true"
+            VolumeSize: 50
+      IamInstanceProfile: "gianreaniam"
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          yum -y update; yum -y install httpd24 php56 mysql-server mysql php56-mysql
+          chkconfig httpd on; chkconfig mysqld on
+          wget https://wordpress.org/latest.tar.gz
+          tar -xvzf latest.tar.gz; rm -rf /var/www/html; mv wordpress /var/www/html; chown -R apache:apache /var/www/html
+
+
+
+  
+
+
