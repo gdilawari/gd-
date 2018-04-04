@@ -58,8 +58,12 @@ Resources:
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash
-          yum -y update; yum -y install httpd24 php56 mysql-server mysql php56-mysql
+          yum -y update; yum -y install httpd24 php56 php56-mysqlnd mysql-server mysql
           chkconfig httpd on; chkconfig mysqld on
+          service mysqld start; service httpd start
+          /usr/libexec/mysql55/mysqladmin -u root password ${mysqlRootPass}
+          /usr/bin/mysql -e "CREATE DATABASE wordpress" -p${mysqlRootPass}
+          /usr/bin/mysql -e "grant all privileges on wordpress.* to 'wordpress'@'localhost' identified by '${mysqlWordPressPass}'" -p${mysqlRootPass}
           wget https://wordpress.org/latest.tar.gz
           tar -xvzf latest.tar.gz; rm -rf /var/www/html; mv wordpress /var/www/html; chown -R apache:apache /var/www/html
 
