@@ -49,7 +49,7 @@ Resources:
       SecurityGroupIds:
       - !Ref SgID 
       BlockDeviceMappings:
-        - DeviceName: "/dev/xvda1"
+        - DeviceName: "/dev/xvda"
           Ebs:
             VolumeType: "gp2"
             DeleteOnTermination: "true"
