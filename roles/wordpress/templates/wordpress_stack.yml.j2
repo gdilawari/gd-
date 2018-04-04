@@ -66,6 +66,17 @@ Resources:
           /usr/bin/mysql -e "grant all privileges on wordpress.* to 'wordpress'@'localhost' identified by '${mysqlWordPressPass}'" -p${mysqlRootPass}
           wget https://wordpress.org/latest.tar.gz
           tar -xvzf latest.tar.gz; rm -rf /var/www/html; mv wordpress /var/www/html; chown -R apache:apache /var/www/html
+          pubip="$(curl http://169.254.169.254/latest/meta-data/public-ipv4/)"
+          curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+          chmod +x wp-cli.phar
+          mv wp-cli.phar /usr/bin/wp
+          wp core config --path=/var/www/html --dbname=wordpress --dbuser=wordpress --dbpass=${mysqlWordPressPass} --extra-php <<PHP
+          define('WP_DEBUG', true);
+          define('WP_DEBUG_LOG', true);
+          define('WP_DEBUG_DISPLAY', true);
+          define('WP_MEMORY_LIMIT', '256M');
+          PHP
+          wp core install --path=/var/www/html --title="Demo Site" --url=http://$pubip --admin_user=admin --admin_password=${wordpress_admin_pass} --admin_email=${wordpress_admin_email}
 
 
 
