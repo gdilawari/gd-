@@ -33,6 +33,11 @@ Parameters:
     NoEcho: 'true'
     Type: AWS::SSM::Parameter::Value<String>
     Default: "wordpress_admin_pass"
+  wordpressAdminEmail:
+    Description: WordPress Admin Email
+    NoEcho: 'true'
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: "wordpress_admin_email"
 
 Resources:
   WordpressInstance:
