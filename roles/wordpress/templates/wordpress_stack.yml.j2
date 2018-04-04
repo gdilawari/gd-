@@ -5,15 +5,15 @@ Parameters:
   VpcID:
     Description: The VPC to deploy to
     Type: String
-    Default: {{ vpc }}
+    Default: {{ shared_vpc_id }}
   SubnetID:
     Description: The Subnet to deploy to
     Type: String
-    Default: {{ subnet }}
+    Default: {{ public_subnet_b }}
   SgID:
     Description: The Security Group to assign the instance
     Type: String
-    Default: {{ sg }}
+    Default: {{ security_group_id }}
   mysqlRootPass:
     Description: MySQL Root Password
     NoEcho: 'true'
